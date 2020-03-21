@@ -9,6 +9,7 @@
         * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
 
         body {
@@ -33,9 +34,94 @@
         }
 
         .content {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
         }
+
+        .content .buttons {
+            display: inline-block;
+            color: #000000;
+            border: 2px solid #000000;
+            box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 1);
+        }
+
+        .content .buttons a {
+            font-size: 20px;
+            color: #000000;
+            padding: 5px 16px;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .content .buttons a:first-child {
+            border-right: 2px solid #000000;
+        }
+
+        .content .infos {
+            display: flex;
+            padding: 10px;
+            margin-top: 50px;
+            align-items: baseline;
+            justify-content: center;
+            border: 4px solid #000000;
+        }
+
+        .content .infos .flightInfos {
+            margin-right: 60px;
+            display: inline-block;
+        }
+
+        .content .infos .flightInfos ul {
+            list-style: none;
+        }
+
+        .content .infos .flightInfos ul li {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        .content .infos .flightInfos ul li:first-child {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .content .infos .countDown {
+            text-align: center;
+            display: inline-block;
+        }
+
+        .content .infos .countDown h3 {
+            font-weight: normal;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .content .infos .countDown ul {
+            list-style: none;
+        }
+
+        .content .infos .countDown ul li {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        .content .infos .countDown ul li:last-child {
+            margin-right: 0px;
+        }
+
+        .content .infos .countDown ul li p {
+            margin-bottom: 5px;
+        }
+
         .imza {
-            margin-bottom: 50px;
+            margin-bottom: 30px;
+        }
+
+        .active {
+            background-color: lightskyblue;
         }
     </style>
 </head>
@@ -46,12 +132,115 @@
             <h1>SpaceX Launches</h1>
         </div>
         <div class="content">
-            Gelecek Uçuş
+            <div class="buttons">
+                <a href="javascript:;" class="active">Next</a>
+                <a href="javascript:;">Past</a>
+            </div>
+            <div class="infos">
+                <div class="flightInfos">
+                    <ul>
+                        <li id="FlightNumber">[Flight Number]</li>
+                        <li id="MissionName">[Mission Name]</li>
+                        <li id="RocketName">[Rocket Name]</li>
+                        <li id="LaunchSiteName">[Launch Site Name]</li>
+                    </ul>
+                </div>
+                <div class="countDown">
+                    <h3>Will be launched</h3>
+                    <ul>
+                        <li>
+                            <p id="days">0</p><span>Days</span>
+                        </li>
+                        <li>
+                            <p id="hours">0</p><span>Hours</span>
+                        </li>
+                        <li>
+                            <p id="minutes">0</p><span>Minutes</span>
+                        </li>
+                        <li>
+                            <p id="seconds">0</p><span>Seconds</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
         <div class="imza">
             <span>Bedirhan Yıldırım</span>
         </div>
     </div>
+
+    <script>
+
+        readSpaceXData()
+
+        var nextLaunch = {
+            "site_name": "",
+            "rocket_name": "",
+            "mission_name": "",
+            "flight_number": 0,
+            "launch_date_unix": 0
+        }
+
+        function readSpaceXData() {
+            fetch("https://api.spacexdata.com/v3/launches/upcoming")
+                .then(res => res.json())
+                .then(checkIfItIsOk)
+                .then(fillAreas)
+                .then(countDown)
+        }
+
+        function checkIfItIsOk(data) {
+
+            for (let el of data) {
+                let ctrl = dateChecker(el.launch_date_unix)
+                if (ctrl) {
+                    nextLaunch.flight_number = el.flight_number
+                    nextLaunch.mission_name = el.mission_name
+                    nextLaunch.rocket_name = el.rocket.rocket_name
+                    nextLaunch.site_name = el.launch_site.site_name
+                    nextLaunch.launch_date_unix = el.launch_date_unix
+                    break
+                }
+            }
+        }
+
+        function dateChecker(date) {
+            var now = Date.now() / 1000 | 0
+            if (date - now < 0) {
+                return false
+            }
+            return true
+        }
+
+        function fillAreas() {
+            document.getElementById("FlightNumber").innerText = nextLaunch.flight_number
+            document.getElementById("MissionName").innerText = nextLaunch.mission_name
+            document.getElementById("RocketName").innerText = nextLaunch.rocket_name
+            document.getElementById("LaunchSiteName").innerText = nextLaunch.site_name
+        }
+
+        function countDown() {
+            setInterval(function() {
+                var now = Date.now() / 1000 | 0
+                var fark = nextLaunch.launch_date_unix - now
+
+                var day = Math.floor((fark) / 60 / 60 / 24)
+                document.getElementById("days").innerText = day
+                fark = fark - day * 60 * 60 * 24
+
+                var hours = Math.floor((fark) / 60 / 60)
+                document.getElementById("hours").innerText = hours
+                fark = fark - hours * 60 * 60
+
+                var minutes = Math.floor((fark) / 60)
+                document.getElementById("minutes").innerText = minutes
+                fark = fark - minutes * 60
+
+                var seconds = Math.floor(fark)
+                document.getElementById("seconds").innerText = seconds
+            }, 1000)
+        }
+    </script>
 </body>
 
 </html>
