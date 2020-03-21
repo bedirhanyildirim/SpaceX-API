@@ -1,0 +1,127 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Comic Sans MS"
+}
+
+#app {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background-color: #ffffff;
+    justify-content: space-between;
+}
+
+.title {
+    display: flex;
+    margin-top: 50px;
+    align-items: center;
+    justify-content: center;
+}
+
+.content {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.content .buttons {
+    display: inline-block;
+    color: #000000;
+    border: 2px solid #000000;
+    box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 1);
+}
+
+.content .buttons a {
+    float: left;
+    font-size: 20px;
+    color: #000000;
+    padding: 5px 16px;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.content .buttons a:first-child {
+    border-right: 2px solid #000000;
+}
+
+.content .infos {
+    display: flex;
+    padding: 10px;
+    margin-top: 50px;
+    align-items: baseline;
+    justify-content: center;
+    border: 4px solid #000000;
+}
+
+.content .infos .flightInfos {
+    margin-right: 60px;
+    display: inline-block;
+}
+
+.content .infos .flightInfos ul {
+    list-style: none;
+}
+
+.content .infos .flightInfos ul li {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+.content .infos .flightInfos ul li:first-child {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.content .infos .countDown {
+    text-align: center;
+    display: inline-block;
+}
+
+.content .infos .countDown h3 {
+    font-weight: normal;
+    margin-bottom: 20px;
+    display: inline-block;
+}
+
+.content .infos .countDown ul {
+    list-style: none;
+}
+
+.content .infos .countDown ul li {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.content .infos .countDown ul li:last-child {
+    margin-right: 0px;
+}
+
+.content .infos .countDown ul li p {
+    margin-bottom: 5px;
+}
+
+.next-container,
+.past-container {
+    display: inherit;
+}
+
+.past-container {
+    display: none;
+}
+
+.imza {
+    margin-bottom: 30px;
+}
+
+.active {
+    background-color: lightskyblue;
+}
